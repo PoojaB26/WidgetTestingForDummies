@@ -5,26 +5,189 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:test_food_with_flutter/main.dart';
+import 'package:test_food_with_flutter/recipe_list.dart';
+import 'package:test_food_with_flutter/recipes/constants.dart';
+import 'package:test_food_with_flutter/recipes/tea.dart';
+import 'package:test_food_with_flutter/recipes/tea_2.dart';
+import 'package:test_food_with_flutter/recipes/tea_3.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  setUpAll(() {});
+  testWidgets('Find Recipes by Key', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: RecipeList()));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    //Find By Text
+    expect(find.text('Tea'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Find By Key
+    expect(find.byKey(Key('tea')), findsOneWidget);
+    expect(find.byKey(Key('omelette')), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Tap Recipe Tea & Ensure Widget Loads',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: RecipeList()));
+    tester.tap(find.widgetWithText(RecipeButton, 'Tea'));
+  });
+
+  Finder waterTextField, milkField, teaPowderField, sugarField, boilButton;
+  group('Check Tea Recipes', () {
+    setUpAll(() {
+      waterTextField = find.byKey(Key('water'));
+      milkField = find.byKey(Key('milk'));
+      teaPowderField = find.byKey(Key('teaPowder'));
+      sugarField = find.byKey(Key('sugar'));
+      boilButton = find.widgetWithText(ElevatedButton, 'BOIL');
+    });
+
+    ///
+    ///
+    /// CHECK IF TEA INGREDIENTS ARE ALL ZERO IN THE BEGINNING
+    ///
+    ///
+    ///
+
+    testWidgets('Check If Tea Ingredients are All Zero',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+      expect(waterTextField, findsOneWidget);
+      expect(waterController.text, '0');
+
+      expect(milkField, findsOneWidget);
+      expect(milkController.text, '0');
+
+      expect(teaPowderField, findsOneWidget);
+      expect(teaPowderController.text, '0');
+
+      expect(sugarField, findsOneWidget);
+      expect(sugarController.text, '0');
+    });
+
+    ///
+    ///
+    /// Check The Visibility of Output Message
+    ///
+    ///
+
+    testWidgets('Check The Visibility of Output Message',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+      expect(find.byKey(Key('output')), findsNothing);
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+
+      await tester.tap(boilButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(Key('output')), findsOneWidget);
+    });
+
+    ///
+    ///
+    /// CHECK IF TEA IS BLACK TEA!
+    ///
+    ///
+
+    testWidgets('Check If Tea is Black Tea', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+
+      await tester.tap(boilButton);
+      await tester.pump();
+      print(messageText);
+
+      expect(find.text(ANS_BLACK_TEA), findsOneWidget);
+    });
+
+    ///
+    ///
+    /// CHECK IF TEA HAS TOO MUCH MILK
+    ///
+    ///
+
+    testWidgets('Check If Tea Has Too Much Milk', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+
+      expect(milkField, findsOneWidget);
+      await tester.tap(milkField);
+      await tester.pump();
+      await tester.enterText(milkField, '5');
+
+      expect(sugarField, findsOneWidget);
+      expect(sugarController.text, SUGAR_ACTUAL,
+          skip: "Sugar is skipped because it depends on preference");
+
+      await tester.tap(boilButton);
+      await tester.pump();
+      print(messageText);
+
+      expect(find.text(ANS_LIGHT_TEA), findsOneWidget);
+    });
+
+    testWidgets('Check If Tea is Black Tea & Boiled Properly',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipeWithLongBoil()));
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+
+      await tester.tap(boilButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text(ANS_BLACK_TEA), findsOneWidget);
+    });
+
+    testWidgets('Scroll the list of ingredients and boil',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: RecipeWithLongList()));
+      Finder listView = find.byKey(Key('listView'));
+      await tester.drag(listView, const Offset(0.0, -500));
+      await tester.pump();
+
+      await tester.ensureVisible(boilButton);
+      await tester.tap(boilButton);
+    });
   });
 }
