@@ -5,12 +5,9 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:developer';
-import 'package:rxdart/rxdart.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:test_food_with_flutter/main.dart';
 import 'package:test_food_with_flutter/recipe_list.dart';
 import 'package:test_food_with_flutter/recipes/constants.dart';
 import 'package:test_food_with_flutter/recipes/tea.dart';
