@@ -6,7 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:developer';
-
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,13 +27,6 @@ void main() {
 
     // Find By Key
     expect(find.byKey(Key('tea')), findsOneWidget);
-    expect(find.byKey(Key('omelette')), findsOneWidget);
-  });
-
-  testWidgets('Tap Recipe Tea & Ensure Widget Loads',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: RecipeList()));
-    tester.tap(find.widgetWithText(RecipeButton, 'Tea'));
   });
 
   Finder waterTextField, milkField, teaPowderField, sugarField, boilButton;
@@ -188,6 +181,39 @@ void main() {
 
       await tester.ensureVisible(boilButton);
       await tester.tap(boilButton);
+    });
+
+    testWidgets('Check If Tea is Black Tea In a Smaller Screen',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+      // tester.binding.window.physicalSizeTestValue = Size(50, 50);
+      // tester.binding.window.devicePixelRatioTestValue = 1.0;
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+
+      await tester.tap(boilButton);
+      await tester.pump();
+      print(messageText);
+
+      expect(find.text(ANS_BLACK_TEA), findsOneWidget);
+    });
+
+    testWidgets('Check if Tea is Inside a RecipeButton Widget',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: RecipeList()));
+
+      final buttonFinder = find.ancestor(
+          of: find.text('Tea'), matching: find.byType(RecipeButton));
+
+      expect(buttonFinder, findsOneWidget);
     });
   });
 }
