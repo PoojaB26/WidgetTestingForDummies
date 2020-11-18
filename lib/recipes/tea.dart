@@ -84,8 +84,7 @@ class _TeaRecipeState extends State<TeaRecipe> {
 
     if (milk == MILK_ACTUAL &&
         water == WATER_ACTUAL &&
-        teaPowder == TEA_POWDER_ACTUAL &&
-        sugar == SUGAR_ACTUAL) {
+        teaPowder == TEA_POWDER_ACTUAL) {
       setState(() {
         messageText = ANS_PERFECT_MILK_TEA;
       });

@@ -89,6 +89,8 @@ class _TeaRecipeWithLongBoilState extends State<TeaRecipeWithLongBoil> {
     int sugar = int.parse(sugarController.text);
     int milk = int.parse(milkController.text);
     int teaPowder = int.parse(teaPowderController.text);
+
+    // DELAY OF 5 SECS:
     await Future.delayed(Duration(seconds: 5));
 
     /// NO MILK / BLACK TEA!
