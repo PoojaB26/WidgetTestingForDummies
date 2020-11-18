@@ -13,6 +13,7 @@ class _TeaRecipeState extends State<TeaRecipe> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Container(
         alignment: Alignment.center,
         height: MediaQuery.of(context).size.height,
@@ -78,8 +79,17 @@ class _TeaRecipeState extends State<TeaRecipe> {
     });
     int water = int.parse(waterController.text);
     int sugar = int.parse(sugarController.text);
-    int milk = int.parse(milkController.text);
+    num milk = num.parse(milkController.text);
     int teaPowder = int.parse(teaPowderController.text);
+
+    if (milk == MILK_ACTUAL &&
+        water == WATER_ACTUAL &&
+        teaPowder == TEA_POWDER_ACTUAL &&
+        sugar == SUGAR_ACTUAL) {
+      setState(() {
+        messageText = ANS_PERFECT_MILK_TEA;
+      });
+    }
 
     /// NO MILK / BLACK TEA!
     if (milk == 0) {
