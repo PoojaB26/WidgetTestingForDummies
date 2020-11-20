@@ -14,8 +14,28 @@ import 'package:test_food_with_flutter/recipes/tea_2.dart';
 import 'package:test_food_with_flutter/recipes/tea_3.dart';
 
 void main() {
+  ///
+  ///
+  /// EMPTY TEST
+  ///
+  ///
+  testWidgets('Dummy Test', (WidgetTester tester) async {
+    //
+  });
+
+  ///
+  ///
+  /// VERIFY IF RECIPE [TEA] IS PART OF THE RECIPE LIST
+  ///
+  ///
+
   testWidgets('Find Recipes by Key', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RecipeList()));
+
+    // await tester
+    //     .pumpWidget(Directionality(
+    //     textDirection: TextDirection.ltr,
+    //     child: MediaQuery(data: MediaQueryData(), child: RecipeList())));
 
     //Find By Text
     expect(find.text('Tea'), findsOneWidget);
@@ -24,9 +44,39 @@ void main() {
     expect(find.byKey(Key('tea')), findsOneWidget);
   });
 
+  ///
+  ///
+  /// TEA RECIPE GROUP!
+  ///
+  ///
+
   Finder waterTextField, milkField, teaPowderField, sugarField, boilButton;
-  group('Check Tea Recipes', () {
-    setUpAll(() {
+  group('Verify it is the best tea in the world.', () {
+    //
+    testWidgets('Check If Tea Ingredients are All Zero',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+
+      expect(waterTextField, findsOneWidget);
+      expect(waterController.text, '0');
+
+      expect(milkField, findsOneWidget);
+      expect(milkController.text, '0');
+
+      expect(teaPowderField, findsOneWidget);
+      expect(teaPowderController.text, '0');
+
+      expect(sugarField, findsOneWidget);
+      expect(sugarController.text, '0');
+    });
+
+    ///
+    ///
+    /// SETUP INGREDIENTS:
+    ///
+    ///
+    setUp(() {
       waterTextField = find.byKey(Key('water'));
       milkField = find.byKey(Key('milk'));
       teaPowderField = find.byKey(Key('teaPowder'));
@@ -36,11 +86,9 @@ void main() {
 
     ///
     ///
-    /// CHECK IF TEA INGREDIENTS ARE ALL ZERO IN THE BEGINNING
+    /// VERIFY IF TEA INGREDIENTS ARE ALL ZERO IN THE BEGINNING
     ///
     ///
-    ///
-
     testWidgets('Check If Tea Ingredients are All Zero',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
@@ -56,6 +104,32 @@ void main() {
 
       expect(sugarField, findsOneWidget);
       expect(sugarController.text, '0');
+    });
+
+    ///
+    ///
+    /// VERIFY IF TEA IS BLACK TEA!
+    ///
+    ///
+
+    testWidgets('Verify If Tea is Black Tea', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
+
+      expect(waterTextField, findsOneWidget);
+      await tester.tap(waterTextField);
+      await tester.pump();
+      await tester.enterText(waterTextField, '1');
+      //
+      expect(teaPowderField, findsOneWidget);
+      await tester.tap(teaPowderField);
+      await tester.pump();
+      await tester.enterText(teaPowderField, '1');
+      //
+      await tester.tap(boilButton);
+      await tester.pump();
+      print(messageText);
+      //
+      expect(find.text(ANS_BLACK_TEA), findsOneWidget);
     });
 
     ///
@@ -81,44 +155,19 @@ void main() {
       await tester.enterText(teaPowderField, '1');
 
       await tester.tap(boilButton);
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byKey(Key('output')), findsOneWidget);
     });
 
     ///
     ///
-    /// CHECK IF TEA IS BLACK TEA!
+    /// VERIFY IF ITS A PERFECT MILK TEA!
     ///
     ///
 
-    testWidgets('Check If Tea is Black Tea', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
-
-      expect(waterTextField, findsOneWidget);
-      await tester.tap(waterTextField);
-      await tester.pump();
-      await tester.enterText(waterTextField, '1');
-
-      expect(teaPowderField, findsOneWidget);
-      await tester.tap(teaPowderField);
-      await tester.pump();
-      await tester.enterText(teaPowderField, '1');
-
-      await tester.tap(boilButton);
-      await tester.pump();
-      print(messageText);
-
-      expect(find.text(ANS_BLACK_TEA), findsOneWidget);
-    });
-
-    ///
-    ///
-    /// CHECK IF TEA HAS TOO MUCH MILK
-    ///
-    ///
-
-    testWidgets('Check If Tea Has Too Much Milk', (WidgetTester tester) async {
+    testWidgets('Verify it is a perfect milk tea!',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
 
       expect(waterTextField, findsOneWidget);
@@ -134,20 +183,26 @@ void main() {
       expect(milkField, findsOneWidget);
       await tester.tap(milkField);
       await tester.pump();
-      await tester.enterText(milkField, '5');
+      await tester.enterText(milkField, '3.4');
 
       expect(sugarField, findsOneWidget);
       expect(sugarController.text, SUGAR_ACTUAL,
           skip: "Sugar is skipped because it depends on preference");
-
+      //
       await tester.tap(boilButton);
       await tester.pump();
-      print(messageText);
-
-      expect(find.text(ANS_LIGHT_TEA), findsOneWidget);
+      // print(messageText);
+      //
+      expect(find.text(ANS_PERFECT_MILK_TEA), findsOneWidget);
     });
 
-    testWidgets('Check If Tea is Black Tea & Boiled Properly',
+    ///
+    ///
+    /// VERIFY TEA IS BLACK AND BOILED PROPERLY!
+    ///
+    ///
+
+    testWidgets('Verify If Tea is Black Tea & Boiled Properly',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: TeaRecipeWithLongBoil()));
 
@@ -162,27 +217,23 @@ void main() {
       await tester.enterText(teaPowderField, '1');
 
       await tester.tap(boilButton);
+
       await tester.pumpAndSettle();
 
       expect(find.text(ANS_BLACK_TEA), findsOneWidget);
     });
 
-    testWidgets('Scroll the list of ingredients and boil',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: RecipeWithLongList()));
-      Finder listView = find.byKey(Key('listView'));
-      await tester.drag(listView, const Offset(0.0, -500));
-      await tester.pump();
-
-      await tester.ensureVisible(boilButton);
-      await tester.tap(boilButton);
-    });
+    ///
+    ///
+    /// VERIFY APP WORKS IN A SMALLER SCREEN
+    ///
+    ///
 
     testWidgets('Check If Tea is Black Tea In a Smaller Screen',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: TeaRecipe()));
-      // tester.binding.window.physicalSizeTestValue = Size(50, 50);
-      // tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.binding.window.physicalSizeTestValue = Size(500, 500);
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
 
       expect(waterTextField, findsOneWidget);
       await tester.tap(waterTextField);
@@ -200,6 +251,12 @@ void main() {
 
       expect(find.text(ANS_BLACK_TEA), findsOneWidget);
     });
+
+    ///
+    ///
+    /// VERIFY RECIPE NAME [TEA] IS INSIDE A [RECIPE BUTTON] WIDGET.
+    ///
+    ///
 
     testWidgets('Check if Tea is Inside a RecipeButton Widget',
         (WidgetTester tester) async {
